@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'pmd'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JMS stuff
+    compile 'javax.jms:javax.jms-api:2.0'
+
+    // Testing of code functionality
+    testCompile 'junit:junit:4.+'
+
+    // Utils
+    compile 'org.apache.commons:commons-lang3:3.4'
+}
+
+pmd {
+    ruleSetFiles = rootProject.files("code-quality-rules.xml")
+}
