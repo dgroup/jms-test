@@ -23,9 +23,8 @@ If you want to run this example, please perform steps below:
 - PMD (code rules validation);
 
 ## jclub 
-- **POST** request
-- url `https://hooks.slack.com/services/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` 
-- parameter `payload` with content  
+New **POST** request to url `https://hooks.slack.com/services/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` 
+with text  
 ```json
 {
         "text": "<...>"
