@@ -1,9 +1,5 @@
 package examples.jms.queue;
 
-import javax.jms.JMSException;
-import javax.jms.QueueConnection;
-import javax.jms.QueueSender;
-import javax.jms.QueueSession;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Hashtable;
@@ -26,7 +22,7 @@ final class JmsUtil {
 
 
 
-    static InitialContext getWebLogicInitialContext(String url) {
+    static InitialContext getWebLogicJndiContext(String url) {
         try {
 
             Hashtable<String, String> env = new Hashtable<>();

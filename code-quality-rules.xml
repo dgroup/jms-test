@@ -8,6 +8,9 @@
         <rule ref="rulesets/java/optimizations.xml/AvoidInstantiatingObjectsInLoops">
             <priority>5</priority>
         </rule>
+        <rule ref="rulesets/java/strictexception.xml/AvoidCatchingGenericException">
+            <priority>5</priority>
+        </rule>
     -->
 
     <!-- empty.xml -->
@@ -551,9 +554,6 @@
     </rule>
     <rule ref="rulesets/java/strictexception.xml/AvoidThrowingNewInstanceOfSameException">
         <priority>3</priority>
-    </rule>
-    <rule ref="rulesets/java/strictexception.xml/AvoidCatchingGenericException">
-        <priority>5</priority>
     </rule>
     <rule ref="rulesets/java/strictexception.xml/AvoidLosingExceptionInformation">
         <priority>5</priority>

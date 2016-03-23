@@ -40,7 +40,7 @@ public class QueueReceive implements MessageListener, AutoCloseable {
             qreceiver.setMessageListener(this);
             qcon.start();
 
-        } catch (NamingException |JMSException e) {
+        } catch (NamingException|JMSException e) {
             throw new JmsInfrustructureException("Shit happens, mate", e);
         }
     }
@@ -69,10 +69,6 @@ public class QueueReceive implements MessageListener, AutoCloseable {
 
 
 
-    /**
-     * Closes JMS objects.
-     * @exception JMSException if JMS fails to close objects due to internal error
-     */
     public void close() {
         JmsUtil.close(qreceiver, qsession, qcon);
     }
@@ -81,7 +77,7 @@ public class QueueReceive implements MessageListener, AutoCloseable {
 
 
     /**
-     * @param `t3://127.0.0.1:7001`
+     * @param args t3://127.0.0.1:7001
      */
     public static void main(String[] args) throws NamingException, JMSException {
         if (args.length != 1) {
@@ -89,7 +85,7 @@ public class QueueReceive implements MessageListener, AutoCloseable {
             return;
         }
 
-        Context jndi = getWebLogicInitialContext(args[0]);
+        Context jndi = getWebLogicJndiContext(args[0]);
 
         try(QueueReceive qr = new QueueReceive(jndi, QUEUE)) {
             System.out.println("JMS Ready To Receive Messages (To quit, send a \"quit\" message).");
@@ -99,7 +95,9 @@ public class QueueReceive implements MessageListener, AutoCloseable {
                 while (!qr.quit) {
                     try {
                         qr.wait();
-                    } catch (InterruptedException ie) {}
+                    } catch (InterruptedException ie) {
+                        // no actions required for our case
+                    }
                 }
             }
         }

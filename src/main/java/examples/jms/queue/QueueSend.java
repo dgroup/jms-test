@@ -66,7 +66,7 @@ public class QueueSend implements AutoCloseable
     }
 
     /**
-     * @param `t3://127.0.0.1:7001`
+     * @param args t3://127.0.0.1:7001
      */
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -74,7 +74,7 @@ public class QueueSend implements AutoCloseable
             return;
         }
 
-        Context jndi = getWebLogicInitialContext(args[0]);
+        Context jndi = getWebLogicJndiContext(args[0]);
 
         try(QueueSend qs = new QueueSend(jndi, QUEUE)){
             readAndSend(qs);
@@ -95,6 +95,5 @@ public class QueueSend implements AutoCloseable
                 System.out.println("JMS Message Sent: "+line+"\n");
             }
         } while (! "quit".equalsIgnoreCase(line));
-
     }
 }
