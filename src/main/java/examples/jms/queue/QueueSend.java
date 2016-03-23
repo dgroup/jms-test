@@ -80,7 +80,6 @@ public class QueueSend
     /** main() method.
      *
      * @param args WebLogic Server URL
-     * @exception Exception if operation fails
      */
     public static void main(String[] args) throws NamingException, JMSException, IOException {
         if (args.length != 1) {

@@ -6,7 +6,8 @@ repositories {
 }
 
 dependencies {
-    // JMS stuff
+    // JMS-related stuff
+    compile files('lib/wlclient.jar')
     compile 'javax.jms:javax.jms-api:2.0'
 
     // Testing of code functionality
