@@ -1,9 +1,10 @@
-  
 ## JMS demo [![Build Status](https://semaphoreci.com/api/v1/dgroup/jms-test/branches/master/shields_badge.svg)](https://semaphoreci.com/dgroup/jms-test) [![Java version](https://img.shields.io/badge/java-8+-brightgreen.svg)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
-This is simple example of JMS technology on Oracle Weblogic server.
-See the [original article](https://blogs.oracle.com/soaproactive/entry/how_to_create_a_simple).
-
+This is simple example of JMS technology on Oracle Weblogic server. See the [original article](https://blogs.oracle.com/soaproactive/entry/how_to_create_a_simple).
+Also jms-related materials:
+- [What's New in JMS 2.0, Part One: Ease of Use](http://www.oracle.com/technetwork/articles/java/jms20-1947669.html)
+- [Н.Алименков](https://www.youtube.com/watch?v=ExjPxDxkmFo) [vs](http://www.slideshare.net/alimenkou/do-we-need-jms-in-21st-century) [JMS](https://www.youtube.com/watch?v=RVwXdCfzJZA)
+ 
 
 If you want to run this example, please perform steps below:
 

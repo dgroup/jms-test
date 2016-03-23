@@ -10,9 +10,6 @@ dependencies {
     compile files('lib/wlclient.jar')
     compile 'javax.jms:javax.jms-api:2.0'
 
-    // Testing of code functionality
-    testCompile 'junit:junit:4.+'
-
     // Utils
     compile 'org.apache.commons:commons-lang3:3.4'
 }

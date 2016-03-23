@@ -2,13 +2,12 @@ package examples.jms.queue;
 
 import javax.jms.*;
 import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Hashtable;
 
+import static examples.jms.queue.JmsUtil.*;
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 
 /** This example shows how to establish a connection
@@ -19,21 +18,13 @@ import static org.apache.commons.lang3.StringUtils.isNoneBlank;
  *
  * @author Copyright (c) 1999-2005 by BEA Systems, Inc. All Rights Reserved.
  */
-public class QueueSend
+public class QueueSend implements AutoCloseable
 {
-    // Defines the JNDI context factory.
-    public final static String JNDI_FACTORY="weblogic.jndi.WLInitialContextFactory";
-
-    // Defines the JMS context factory.
-    public final static String JMS_FACTORY="jms/TestConnectionFactory";
-
-    // Defines the queue.
-    public final static String QUEUE="jms/TestJMSQueue";
-
     private QueueConnection qcon;
     private QueueSession qsession;
     private QueueSender qsender;
     private TextMessage msg;
+
 
     /**
      * Creates all the necessary objects for sending
@@ -41,61 +32,58 @@ public class QueueSend
      *
      * @param ctx JNDI initial context
      * @param queueName name of queue
-     * @exception NamingException if operation cannot be performed
-     * @exception JMSException if JMS fails to initialize due to internal error
      */
-    public void init(Context ctx, String queueName)
-            throws NamingException, JMSException
-    {
-        QueueConnectionFactory qconFactory = (QueueConnectionFactory) ctx.lookup(JMS_FACTORY);
-        qcon = qconFactory.createQueueConnection();
-        qsession = qcon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-        Queue queue = (Queue) ctx.lookup(queueName);
-        qsender = qsession.createSender(queue);
-        msg = qsession.createTextMessage();
-        qcon.start();
+    public QueueSend(Context ctx, String queueName) {
+        try {
+
+            QueueConnectionFactory qconFactory = (QueueConnectionFactory) ctx.lookup(JMS_FACTORY);
+            qcon = qconFactory.createQueueConnection();
+            qsession = qcon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+            Queue queue = (Queue) ctx.lookup(queueName);
+            qsender = qsession.createSender(queue);
+            msg = qsession.createTextMessage();
+            qcon.start();
+
+        } catch (NamingException|JMSException e){
+            throw new JmsNotificationException("Shit happens, mate.", e);
+        }
+    }
+
+
+    public void send(String message) {
+        try {
+
+            msg.setText(message);
+            qsender.send(msg);
+
+        } catch (JMSException e){
+            throw new JmsNotificationException("Unable to send a message: " + message, e);
+        }
+    }
+
+    public void close() {
+        JmsUtil.close(qsender, qsession, qcon);
     }
 
     /**
-     * Sends a message to a JMS queue.
-     *
-     * @param message  message to be sent
-     * @exception JMSException if JMS fails to send message due to internal error
+     * @param `t3://127.0.0.1:7001`
      */
-    public void send(String message) throws JMSException {
-        msg.setText(message);
-        qsender.send(msg);
-    }
-
-    /**
-     * Closes JMS objects.
-     * @exception JMSException if JMS fails to close objects due to internal error
-     */
-    public void close() throws JMSException {
-        qsender.close();
-        qsession.close();
-        qcon.close();
-    }
-
-    /** main() method.
-     *
-     * @param args WebLogic Server URL
-     */
-    public static void main(String[] args) throws NamingException, JMSException, IOException {
+    public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.out.println("Usage: java examples.jms.queue.QueueSend WebLogicURL");
             return;
         }
-        InitialContext ic = getInitialContext(args[0]);
-        QueueSend qs = new QueueSend();
-        qs.init(ic, QUEUE);
-        readAndSend(qs);
-        qs.close();
+
+        Context jndi = getWebLogicInitialContext(args[0]);
+
+        try(QueueSend qs = new QueueSend(jndi, QUEUE)){
+            readAndSend(qs);
+        }
     }
 
 
     private static void readAndSend(QueueSend qs)
-        throws IOException, JMSException
+        throws IOException
     {
         BufferedReader msgStream = new BufferedReader(new InputStreamReader(System.in));
         String line;
@@ -108,15 +96,5 @@ public class QueueSend
             }
         } while (! "quit".equalsIgnoreCase(line));
 
-    }
-
-
-    private static InitialContext getInitialContext(String url)
-        throws NamingException
-    {
-        Hashtable<String, String> env = new Hashtable<>();
-        env.put(Context.INITIAL_CONTEXT_FACTORY, JNDI_FACTORY);
-        env.put(Context.PROVIDER_URL, url);
-        return new InitialContext(env);
     }
 }
