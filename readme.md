@@ -1,5 +1,5 @@
   
-## JMS demo [![Build Status](https://semaphoreci.com/api/v1/dgroup/jspc-test/branches/master/shields_badge.svg)](https://semaphoreci.com/dgroup/jspc-test) [![Java version](https://img.shields.io/badge/java-8+-brightgreen.svg)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
+## JMS demo [![Build Status](https://semaphoreci.com/api/v1/dgroup/jms-test/branches/master/shields_badge.svg)](https://semaphoreci.com/dgroup/jms-test) [![Java version](https://img.shields.io/badge/java-8+-brightgreen.svg)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
 This is simple example of JMS technology on Oracle Weblogic server.
 See the [original article](https://blogs.oracle.com/soaproactive/entry/how_to_create_a_simple).
