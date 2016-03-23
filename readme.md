@@ -22,4 +22,14 @@ If you want to run this example, please perform steps below:
 - Gradle (build system); 
 - PMD (code rules validation);
 
+## jclub 
+- **POST** request
+- url `https://hooks.slack.com/services/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` 
+- parameter `payload` with content  
+```json
+{
+        "text": "<...>"
+}
+```
+
 Have a fun.
