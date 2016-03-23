@@ -12,10 +12,7 @@ If you want to run this example, please perform steps below:
 3. Install [Oracle WebLogic](http://www.oracle.com/technetwork/middleware/weblogic/downloads/wls-main-097127.html)
 4. [Create domain, jms server, etc on WebLogic](https://blogs.oracle.com/soaproactive/entry/how_to_create_a_simple).
 5. Start domain (`cd weblogic/wls12210/user_projects/domains/<your_domain>/bin/startWebLogic.cmd`)
-6. Build project. Call script below in `cmd`
-```cmd
-    gradle build
-```
+6. Build project. Call `gradle build` in `cmd`
 7. Run the `examples.jms.queue.QueueSend` and `examples.jms.queue.QueueReceive` as general java classes;
 
 ## Quick tech overview
