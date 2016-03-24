@@ -1,5 +1,6 @@
 package examples.jms.queue;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.Hashtable;
@@ -21,6 +22,9 @@ final class JmsUtil {
     }
 
 
+    static InitialContext getDefaultWeblogicJndiContext(){
+        return getWebLogicJndiContext("t3://127.0.0.1:7001");
+    }
 
     static InitialContext getWebLogicJndiContext(String url) {
         try {
@@ -35,6 +39,15 @@ final class JmsUtil {
         }
     }
 
+    static <T> T lookup(Context context, String key, Class<T> type){
+        try {
+
+            return type.cast(context.lookup(key));
+
+        } catch (NamingException|ClassCastException e) {
+            throw new JmsNotificationException("Shit happens, mate.", e);
+        }
+    }
 
 
     static void close(AutoCloseable ...closeable) {

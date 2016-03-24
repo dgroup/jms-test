@@ -2,7 +2,6 @@ package examples.jms.queue;
 
 import javax.jms.*;
 import javax.naming.Context;
-import javax.naming.NamingException;
 
 import static examples.jms.queue.JmsUtil.*;
 
@@ -17,43 +16,26 @@ import static examples.jms.queue.JmsUtil.*;
  * @author Copyright (c) 1999-2005 by BEA Systems, Inc. All Rights Reserved.
  */
 public class QueueReceive implements MessageListener, AutoCloseable {
-    private QueueConnection qcon;
-    private QueueSession qsession;
-    private QueueReceiver qreceiver;
+
+    private final JMSContext context;
+    private final JMSConsumer consumer;
+
     private boolean quit = false;
 
-    /**
-     * Creates all the necessary objects for receiving
-     * messages from a JMS queue.
-     *
-     * @param ctx JNDI initial context
-     * @param queueName name of queue
-     */
     public QueueReceive(Context ctx, String queueName) {
-        try {
-
-            QueueConnectionFactory qconFactory = (QueueConnectionFactory) ctx.lookup(JMS_FACTORY);
-            qcon = qconFactory.createQueueConnection();
-            qsession = qcon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-            Queue queue = (Queue) ctx.lookup(queueName);
-            qreceiver = qsession.createReceiver(queue);
-            qreceiver.setMessageListener(this);
-            qcon.start();
-
-        } catch (NamingException|JMSException e) {
-            throw new JmsInfrustructureException("Shit happens, mate", e);
-        }
+        Queue queue = lookup(ctx, queueName, Queue.class);
+        context     = lookup(ctx, JMS_FACTORY, QueueConnectionFactory.class).createContext();
+        consumer    = context.createConsumer(queue);
+        consumer.setMessageListener(this);
     }
 
-    /**
-     * Message listener interface.
-     * @param msg  message
-     */
+
+    @Override
     public void onMessage(Message msg) {
         try {
             String msgText = msg instanceof TextMessage? ((TextMessage)msg).getText() : msg.toString();
 
-            System.out.println("Message Received: "+ msgText );
+            System.out.println("Message received: "+ msgText );
 
             if ("quit".equalsIgnoreCase(msgText)) {
                 synchronized(this) {
@@ -66,26 +48,17 @@ public class QueueReceive implements MessageListener, AutoCloseable {
         }
     }
 
-
-
-
     public void close() {
-        JmsUtil.close(qreceiver, qsession, qcon);
+        JmsUtil.close(context, consumer);
     }
 
 
 
 
-    /**
-     * @param args t3://127.0.0.1:7001
-     */
-    public static void main(String[] args) throws NamingException, JMSException {
-        if (args.length != 1) {
-            System.out.println("Usage: java examples.jms.queue.QueueReceive WebLogicURL");
-            return;
-        }
-
-        Context jndi = getWebLogicJndiContext(args[0]);
+    public static void main(String[] args) {
+        Context jndi = args.length == 0
+            ? getDefaultWeblogicJndiContext()
+            : getWebLogicJndiContext(args[0]);
 
         try(QueueReceive qr = new QueueReceive(jndi, QUEUE)) {
             System.out.println("JMS Ready To Receive Messages (To quit, send a \"quit\" message).");
